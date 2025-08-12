@@ -13,7 +13,7 @@ connectDB();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://mern-auth-app-k8kr.onrender.com",
   credentials: true
 }));
 
