@@ -8,7 +8,7 @@ module.exports.register = async (req, res) => {
   const {name,email,password} = req.body;
 
   if(!name || !email || !password){
-    return res.json({successs: false,message: "Please fill all fields"});
+    return res.json({success: false,message: "Please fill all fields"});
   }
 
   try{
