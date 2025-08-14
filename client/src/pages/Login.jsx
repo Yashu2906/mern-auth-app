@@ -117,7 +117,10 @@ const Login = () => {
             Forgot password
           </p>
 
-          <button className="w-full py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-900 text-white font-medium">
+          <button
+            type="submit"
+            className="w-full py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-900 text-white font-medium"
+          >
             {state === "sign up" ? "Sign Up" : "Login"}
           </button>
         </form>
