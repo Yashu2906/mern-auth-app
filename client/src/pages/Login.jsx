@@ -14,39 +14,43 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Make sure axios sends cookies
+  //axios sends cookies
   axios.defaults.withCredentials = true;
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      let data;
+      let response;
       if (state === "sign up") {
-        ({ data } = await axios.post(`${backendUrl}/api/auth/register`, {
+        response = await axios.post(`${backendUrl}/api/auth/register`, {
           name,
           email,
           password,
-        }));
+        });
       } else {
-        ({ data } = await axios.post(`${backendUrl}/api/auth/login`, {
+        response = await axios.post(`${backendUrl}/api/auth/login`, {
           email,
           password,
-        }));
+        });
       }
 
-      if (data.success) {
-        setIsLoggedin(true);
+      const data = response.data;
 
-        // Wait a tiny bit to ensure cookie is set
-        setTimeout(async () => {
-          await getUserData(); // fetch user info after login/register
-          navigate("/"); // then navigate
-        }, 100);
+      if (data.success) {
+        const userRes = await getUserData();
+        if (userRes?.success) {
+          setIsLoggedin(true);
+          navigate("/");
+          toast.success(data.message);
+        } else {
+          setIsLoggedin(false);
+          toast.error("Login failed. Please login again.");
+        }
       } else {
         toast.error(data.message);
       }
-    } catch (error) {
-      toast.error(error.message);
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message);
     }
   };
 
