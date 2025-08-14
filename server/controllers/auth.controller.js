@@ -48,7 +48,17 @@ module.exports.register = async (req, res) => {
     await transporter.sendMail(mailOptions);
 
 
-    return res.json({success: true, message: "User registered successfully"});
+    return res.json({
+  success: true,
+  message: "User registered successfully",
+  user: {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    isAccountVerified: user.isAccountVerified || false
+  }
+});
+
 
   }catch(err){
     res.json({success: false, message:  err.message});
@@ -71,7 +81,17 @@ module.exports.login = async (req, res) => {
     
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if(!isPasswordMatch){
-      return res.json({success: false, message: "Invalid password"});
+      return res.json({
+  success: true,
+  message: "User logged in successfully",
+  user: {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    isAccountVerified: user.isAccountVerified || false
+  }
+});
+
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
