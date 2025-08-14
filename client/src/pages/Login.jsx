@@ -7,8 +7,7 @@ import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { backendUrl, setIsLoggedin, getUserData, setUserData } =
-    useContext(AppContext);
+  const { backendUrl, setIsLoggedin, getUserData } = useContext(AppContext);
 
   const [state, setState] = useState("sign up");
   const [name, setName] = useState("");
@@ -37,8 +36,12 @@ const Login = () => {
 
       if (data.success) {
         setIsLoggedin(true);
-        setUserData(data.user); // set immediately
-        navigate("/");
+
+        // Wait a tiny bit to ensure cookie is set
+        setTimeout(async () => {
+          await getUserData(); // fetch user info after login/register
+          navigate("/"); // then navigate
+        }, 100);
       } else {
         toast.error(data.message);
       }
