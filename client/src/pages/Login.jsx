@@ -36,7 +36,7 @@ const Login = () => {
 
       if (data.success) {
         setIsLoggedin(true);
-        setUserData(data.user); // directly set user data from response
+        await getUserData(); // fetch user info after login
         navigate("/");
       } else {
         toast.error(data.message);
