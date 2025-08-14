@@ -1,5 +1,5 @@
 const express = require('express');
-const {register, login, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword} = require('../controllers/auth.controller');
+const {register, login, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword, verifyResetOtp} = require('../controllers/auth.controller');
 const userAuth = require('../middleware/userAuth');
 
 const authRouter = express.Router();
@@ -12,6 +12,8 @@ authRouter.post('/verify-account',userAuth,verifyEmail)
 authRouter.post('/is-auth',userAuth,isAuthenticated)
 authRouter.post('/send-reset-otp',sendResetOtp)
 authRouter.post('/reset-password',resetPassword)
+authRouter.post('/verify-reset-otp',verifyResetOtp)
+
 
 
 

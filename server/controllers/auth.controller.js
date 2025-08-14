@@ -242,3 +242,35 @@ module.exports.resetPassword = async(req,res)=>{
   }
 
 }
+
+//  Verify Reset OTP
+module.exports.verifyResetOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.json({ success: false, message: "Email and OTP are required" });
+    }
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    if (user.resetOtp !== otp || Date.now() > user.resetOtpExpireAt) {
+      return res.json({ success: false, message: "Invalid or expired OTP" });
+    }
+
+    // Optional: clear OTP after verification
+    user.resetOtp = "";
+    user.resetOtpExpireAt = 0;
+    await user.save();
+
+    return res.json({ success: true, message: "OTP verified successfully" });
+
+  } catch (error) {
+    console.error("Error in verifyResetOtp:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
