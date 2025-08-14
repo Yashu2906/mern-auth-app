@@ -11,43 +11,38 @@ const Login = () => {
 
   const [state, setState] = useState("sign up");
   const [name, setName] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // Make sure axios sends cookies
+  axios.defaults.withCredentials = true;
 
   const onSubmitHandler = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
-
-      axios.defaults.withCredentials = true;
-
+      let data;
       if (state === "sign up") {
-        const { data } = await axios.post(backendUrl + "/api/auth/register", {
+        ({ data } = await axios.post(`${backendUrl}/api/auth/register`, {
           name,
           email,
           password,
-        });
-        if (data.success) {
-          setIsLoggedin(true);
-          getUserData();
-          navigate("/");
-        } else {
-          toast.error(data.message);
-        }
+        }));
       } else {
-        const { data } = await axios.post(backendUrl + "/api/auth/login", {
+        ({ data } = await axios.post(`${backendUrl}/api/auth/login`, {
           email,
           password,
-        });
-        if (data.success) {
-          setIsLoggedin(true);
-          getUserData();
-          navigate("/");
-        } else {
-          toast.error(data.message);
-        }
+        }));
+      }
+
+      if (data.success) {
+        setIsLoggedin(true);
+        await getUserData(); // fetch user info after login
+        navigate("/");
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
-      toast.error(data.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -87,7 +82,7 @@ const Login = () => {
           <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C] ">
             <img src={assets.mail_icon} alt="" />
             <input
-              onChange={(e) => setemail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
               className="bg-transparent outline-none"
               type="email"
@@ -98,7 +93,7 @@ const Login = () => {
           <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C] ">
             <img src={assets.lock_icon} alt="" />
             <input
-              onChange={(e) => setpassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               value={password}
               className="bg-transparent outline-none"
               type="password"
@@ -106,14 +101,16 @@ const Login = () => {
               required
             />
           </div>
+
           <p
             onClick={() => navigate("/resetpassword")}
             className="mb-4 text-indigo-500 cursor-pointer "
           >
             Forgot password
           </p>
+
           <button className="w-full py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-900 text-white font-medium">
-            {state}
+            {state === "sign up" ? "Sign Up" : "Login"}
           </button>
         </form>
 
