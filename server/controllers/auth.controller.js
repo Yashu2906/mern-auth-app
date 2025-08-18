@@ -31,8 +31,8 @@ module.exports.register = async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true, // This must be true in production
-      sameSite: 'None', // This must be 'None' for cross-origin requests
+      secure: true,
+      sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
@@ -74,8 +74,8 @@ module.exports.login = async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true, // Must be true in production
-      sameSite: 'None', // Must be 'None' for cross-origin requests
+      secure: true,
+      sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -91,8 +91,8 @@ module.exports.logout = async (req, res) => {
   try {
     res.clearCookie('token', {
       httpOnly: true,
-      secure: true, // Must be true in production
-      sameSite: 'None' // Must be 'None' for cross-origin requests
+      secure: true,
+      sameSite: 'None'
     });
     return res.json({ success: true, message: "User logged out successfully" });
   }
@@ -101,7 +101,6 @@ module.exports.logout = async (req, res) => {
   }
 }
 
-// The following functions are not changed as they are already correct.
 module.exports.sendVerifyOtp = async (req, res) => {
   try {
     const userId = req.userId;
@@ -254,7 +253,6 @@ module.exports.verifyResetOtp = async (req, res) => {
       return res.json({ success: false, message: "Invalid or expired OTP" });
     }
 
-    // Optional: clear OTP after verification
     user.resetOtp = "";
     user.resetOtpExpireAt = 0;
     await user.save();
