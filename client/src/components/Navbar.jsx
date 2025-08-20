@@ -10,12 +10,11 @@ const Navbar = () => {
   const { userData, backendUrl, setUserData, setIsLoggedin } =
     useContext(AppContext);
 
-  const [menuOpen, setMenuOpen] = useState(false); // 👈 state for toggle
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const sendVerificationOtp = async () => {
     try {
       axios.defaults.withCredentials = true;
-
       const { data } = await axios.post(
         backendUrl + "/api/auth/send-verify-otp"
       );
@@ -50,16 +49,17 @@ const Navbar = () => {
 
       {userData ? (
         <div
-          className="h-8 w-8 flex justify-center items-center rounded-full bg-black text-white relative cursor-pointer"
-          onClick={() => setMenuOpen((prev) => !prev)} // 👈 toggle on click
+          className="h-8 w-8 flex justify-center items-center rounded-full bg-black text-white relative group cursor-pointer"
+          onClick={() => setMenuOpen((prev) => !prev)}
         >
           {userData.name[0].toUpperCase()}
 
           {/* Dropdown menu */}
           <div
-            className={`absolute top-0 right-0 z-10 text-black rounded pt-10 ${
-              menuOpen ? "block" : "hidden"
-            }`}
+            className={`absolute top-0 right-0 z-10 text-black rounded pt-10
+              ${menuOpen ? "block" : "hidden"}   /* Mobile toggle */
+              group-hover:block                 /* Desktop hover */
+            `}
           >
             <ul className="list-none m-0 p-2 bg-gray-100 text-sm shadow-md rounded">
               {!userData.isAccountVerified && (
@@ -84,7 +84,7 @@ const Navbar = () => {
           onClick={() => navigate("/login")}
           className="border rounded-full flex items-center gap-2 border-gray-500 px-6 py-2 text-gray-800 bg-gray-100 transition-all"
         >
-          Login <img src={assets.arrow_icon} alt=""></img>
+          Login <img src={assets.arrow_icon} alt="" />
         </button>
       )}
     </div>
